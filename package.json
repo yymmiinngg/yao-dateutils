@@ -1,10 +1,10 @@
 {
   "name": "yao-dateutils",
   "version": "1.0.0",
-  "description": "A good utils, format like java",
-  "main": "index.js",
+  "description": "日期时间的工具，格式化字符串类似JAVA的SimpleDateFormat",
+  "main": "yao_dateutils.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "author": "Monster Yao",
   "license": "ISC"
