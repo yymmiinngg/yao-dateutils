@@ -1,0 +1,11 @@
+{
+  "name": "yao-dateutils",
+  "version": "1.0.0",
+  "description": "A good utils, format like java",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Monster Yao",
+  "license": "ISC"
+}
