@@ -1,7 +1,7 @@
 {
   "name": "yao-dateutils",
-  "version": "1.0.1",
-  "description": "日期时间的工具，格式化字符串类似JAVA的SimpleDateFormat",
+  "version": "1.0.2",
+  "description": "Date工具：时间计算、时间取整，格式化字符串类似JAVA的SimpleDateFormat，如\"yyyy-MM-dd HH:mm:ss.SSS a\"",
   "main": "yao_dateutils.js",
   "scripts": {
     "test": "node test.js"
