@@ -49,4 +49,4 @@ console.log('时间', DateUtils.format(d, 'yyyy-MM-dd HH:mm:ss.SSS'));
 - s: 秒(0~59);
 - SSS: 毫秒，100以下用0补位;
 - S: 毫秒(0~999);
-- a: ama或pm
+- a: am或pm
