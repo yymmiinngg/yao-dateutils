@@ -1,32 +1,88 @@
 /**
- * 日期工具类，formater参数：格式化字符串，与java相似，年份：yyyy，月份：MM，日：dd，小时：HH，分钟：mm，秒：ss
+ * 日期工具类
  */
+let str_toLength = Symbol('str_toLength');
 class DateUtils {
+
+    static [str_toLength](str, length, fillChar = '0') {
+        if (!str) {
+            str = fillChar;
+        }
+        if ('string' !== typeof (str)) {
+            str = str.toString();
+        }
+        if (str.length < length) while (str.length < length) {
+            str = fillChar + str;
+        } else {
+            str = str.substring(str.length - length, str.length);
+        }
+        return str;
+    }
 
     /**
      * 格式化日期时间
      * @param {Date} date 日期时间对象
      * @param {string} formater 格式化字符串
+     * yyyy:年份(如2019);
+     * yy:短年份(如19);
+     * MMMM:月份，英文全称;
+     * MMM:月份，英文简称;
+     * MM:月份，10以下用0补位;
+     * M:月份(1~12);
+     * dd:日子，10以下用0补位;
+     * d:日子(0~31);
+     * HH:小时，10以下用0补位;
+     * H:小时(0~24);
+     * hh:小时，10以下用0补位;
+     * h:小时(0~12);
+     * mm:分钟，10以下用0补位;
+     * m:分钟(0~59);
+     * ss:秒，10以下用0补位;
+     * s:秒(0~59);
+     * SSS:毫秒，100以下用0补位;
+     * S:毫秒(0~999);
+     * a:am或pm
      * @returns {string} 日期字符串
      */
     static format(date, formater) {
+        if (!date) { 
+            return null;
+        }
         let o = {
+            // 年份
             "yyyy": date.getFullYear(),
-            "MM": date.getMonth() + 1,                 //月份 
-            "dd": date.getDate(),                    //日 
-            "HH": date.getHours(),                   //小时 
-            "mm": date.getMinutes(),                 //分 
-            "ss": date.getSeconds(),                 //秒 
+            "yy": DateUtils[str_toLength](date.getFullYear(), 2),
+            // 月份
+            "MM": DateUtils[str_toLength](date.getMonth() + 1, 2),
+            "M": date.getMonth() + 1,
+            // 日
+            "dd": DateUtils[str_toLength](date.getDate(), 2),
+            "d": date.getDate(),
+            // 小时(24)
+            "HH": DateUtils[str_toLength](date.getHours(), 2),
+            "H": date.getHours(),
+            // 小时(12)
+            "hh": DateUtils[str_toLength](date.getHours() % 12, 2),
+            "h": date.getHours() % 12,
+            // 分
+            "mm": DateUtils[str_toLength](date.getMinutes(), 2),
+            "m": date.getMinutes(),
+            // 秒
+            "ss": DateUtils[str_toLength](date.getSeconds(), 2),
+            "s": date.getSeconds(),
+            // 秒 
+            "SSS": DateUtils[str_toLength](date.getMilliseconds(), 3),
+            "S": date.getMilliseconds(),
+            // 上午|下午
+            "a": date.getHours() < 12 ? 'am' : 'pm',
         };
         for (let k in o) {
-            if (new RegExp("(" + k + ")").test(formater)) {
-                let v = "" + o[k];
-                if (k == 'yyyy') {
-                    formater = formater.replace(RegExp.$1, v);
-                } else {
-                    formater = formater.replace(RegExp.$1, ("00" + o[k]).substr(("" + o[k]).length));
-                }
-
+            let reg = new RegExp(k, 'g');
+            let ms = reg.exec(formater);
+            if (ms && ms.length) for (let i = 0; i < ms.length; i++) {
+                let p = ms[i];
+                let v = o[k];
+                formater = formater.replace(p, v);
             }
         }
         return formater;
@@ -39,36 +95,51 @@ class DateUtils {
      * @returns {Date} 日期时间对象
      */
     static parse(datestr, formater = "yyyy-MM-dd HH:mm:ss") {
+        if (!datestr) { 
+            return null;
+        }
         let fullYearPos = formater.indexOf("yyyy");
+        let shortYearPos = formater.indexOf("yy");
         let monthPos = formater.indexOf("MM");
         let dayhPos = formater.indexOf("dd");
         let hourPos = formater.indexOf("HH");
         let minutePos = formater.indexOf("mm");
         let secondsPos = formater.indexOf("ss");
-        let fullYear = fullYearPos != -1 ? datestr.substring(fullYearPos, fullYearPos + 4) : '1970';
+        let mSecondsPos = formater.indexOf("SSS");
+        let aPos = formater.indexOf("a");
+
+        let fullYear = fullYearPos != -1 ? datestr.substring(fullYearPos, fullYearPos + 4) : (shortYearPos != -1 ? '20' + datestr.substring(shortYearPos, shortYearPos + 2) : '1970');
         let month = monthPos != -1 ? datestr.substring(monthPos, monthPos + 2) : '01';
         let day = dayhPos != -1 ? datestr.substring(dayhPos, dayhPos + 2) : '01';
         let hour = hourPos != -1 ? datestr.substring(hourPos, hourPos + 2) : '00';
         let minute = minutePos != -1 ? datestr.substring(minutePos, minutePos + 2) : '00';
         let seconds = secondsPos != -1 ? datestr.substring(secondsPos, secondsPos + 2) : '00';
+        let mSeconds = mSecondsPos != -1 ? datestr.substring(mSecondsPos, mSecondsPos + 3) : '000';
+        let a = aPos != -1 ? datestr.substring(aPos, aPos + 2) : 'am';
+
         let d4 = /^\d{4}$/;
         let d2 = /^\d{2}$/;
+        let d3 = /^\d{3}$/;
+        let aa = /^[ap]m$/;
         if (!d4.test(fullYear)
             || !d2.test(month)
             || !d2.test(day)
             || !d2.test(hour)
             || !d2.test(minute)
-            || !d2.test(seconds)) {
+            || !d2.test(seconds)
+            || !d3.test(mSeconds)
+            || !aa.test(a)
+        ) {
             return null;
         }
         let date = new Date();
         date.setFullYear(fullYear);
         date.setMonth(month - 1);
         date.setDate(day);
-        date.setHours(hour);
+        date.setHours((hour < 12 && a === 'pm') ? hour + 12 : hour);
         date.setMinutes(minute);
         date.setSeconds(seconds);
-        date.setMilliseconds(0);
+        date.setMilliseconds(mSeconds);
         return date;
     }
 
