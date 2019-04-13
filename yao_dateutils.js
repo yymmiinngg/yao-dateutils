@@ -25,8 +25,6 @@ class DateUtils {
      * @param {string} formater 格式化字符串
      * yyyy:年份(如2019);
      * yy:短年份(如19);
-     * MMMM:月份，英文全称;
-     * MMM:月份，英文简称;
      * MM:月份，10以下用0补位;
      * M:月份(1~12);
      * dd:日子，10以下用0补位;
