@@ -207,6 +207,7 @@ class DateUtils {
     static addSecend(date, sec) {
         return new Date(date.getTime() + sec * 1000);
     }
+
 }
 
 module.exports = DateUtils;
