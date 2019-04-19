@@ -1,4 +1,4 @@
-const DateUtils = require('./yao_dateutils');
+const DateUtils = require('./yao_dateutils').DateUtils;
 
 let now = new Date();
 console.log('当前时间', DateUtils.format(now, 'yy-MM-dd HH:mm:ss'));
@@ -10,3 +10,7 @@ console.log('取整小时', DateUtils.format(DateUtils.round2hour(now), 'yyyy-MM
 
 let d = DateUtils.parse('2019-02-02 02:02:02.002 pm', 'yyyy-MM-dd HH:mm:ss.SSS a');
 console.log('当前时间', DateUtils.format(d, 'yyyy-MM-dd hh:mm:ss.SSS a'));
+
+let yesterday = DateUtils.addDay(now, -1);
+let result = DateUtils.subtract(yesterday,now);
+console.log(result);
