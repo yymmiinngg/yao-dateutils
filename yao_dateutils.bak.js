@@ -43,7 +43,7 @@ class DateUtils {
      * @returns {string} 日期字符串
      */
     static format(date, formater) {
-        if (!date) { 
+        if (!date) {
             return null;
         }
         let o = {
@@ -93,7 +93,7 @@ class DateUtils {
      * @returns {Date} 日期时间对象
      */
     static parse(datestr, formater = "yyyy-MM-dd HH:mm:ss") {
-        if (!datestr) { 
+        if (!datestr) {
             return null;
         }
         let fullYearPos = formater.indexOf("yyyy");
@@ -142,7 +142,22 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到日期（如：2019-01-01 01:01:01 > 2019-01-01 00:00:00）
+     * 时间取整到月（如：2019-01-15 01:01:01 > 2019-01-15 00:00:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static round2month(date) {
+        let _date = new Date(date.getTime());
+        _date.setMilliseconds(0);
+        _date.setSeconds(0);
+        _date.setMinutes(0);
+        _date.setHours(0);
+        _date.setDate(1);
+        return _date;
+    }
+
+    /**
+     * 时间取整到日期（如：2019-01-15 01:01:01 > 2019-01-15 00:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
@@ -156,7 +171,7 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到小时（如：2019-01-01 01:01:01 > 2019-01-01 01:00:00）
+     * 时间取整到小时（如：2019-01-15 01:01:01 > 2019-01-15 01:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
@@ -169,7 +184,30 @@ class DateUtils {
     }
 
     /**
-     * 给日期时间增加天数（如：2019-01-01 01:01:01 . addDay(1) > 2019-01-02 01:01:01）
+     * 时间取整到分钟（如：2019-01-15 01:01:01 > 2019-01-15 01:01:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static round2minute(date) {
+        let _date = new Date(date.getTime());
+        _date.setMilliseconds(0);
+        _date.setSeconds(0);
+        return _date;
+    }
+
+    /**
+     * 时间取整到秒（如：2019-01-15 01:01:01.231 > 2019-01-15 01:01:01.000）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static round2secends(date) {
+        let _date = new Date(date.getTime());
+        _date.setMilliseconds(0);
+        return _date;
+    }
+
+    /**
+     * 给日期时间增加天数（如：2019-01-15 01:01:01 > 2019-01-16 01:01:01）
      * @param {Date} date 日期时间
      * @param {number} day 天数
      * @returns {Date} 增加天数后的日期时间
@@ -179,7 +217,7 @@ class DateUtils {
     }
 
     /**
-     * 给日期时间增加小时数（如：2019-01-01 01:01:01 . addHour(1) > 2019-01-01 02:01:01）
+     * 给日期时间增加小时数（如：2019-01-15 01:01:01 . addHour(1) > 2019-01-15 02:01:01）
      * @param {Date} date 日期时间
      * @param {number} hour 小时数
      * @returns {Date} 增加小时数后的日期时间
@@ -189,7 +227,7 @@ class DateUtils {
     }
 
     /**
-     * 给日期时间增加分钟数（如：2019-01-01 01:01:01 . addMinute(1) > 2019-01-01 01:02:01）
+     * 给日期时间增加分钟数（如：2019-01-15 01:01:01 . addMinute(1) > 2019-01-15 01:02:01）
      * @param {Date} date 日期时间
      * @param {number} minute 分钟数
      * @returns {Date} 增加分钟数后的日期时间
@@ -199,7 +237,7 @@ class DateUtils {
     }
 
     /**
-    * 给日期时间增加秒数（如：2019-01-01 01:01:01 . addSecend(1) > 2019-01-01 01:01:02）
+    * 给日期时间增加秒数（如：2019-01-15 01:01:01 . addSecend(1) > 2019-01-15 01:01:02）
     * @param {Date} date 日期时间
     * @param {number} sec 秒数
     * @returns {Date} 增加秒数后的日期时间
