@@ -1,19 +1,27 @@
 /**
  * 日期工具类
  */
-let str_toLength = Symbol('str_toLength');
+const str_toLength = Symbol();
 class DateUtils {
 
-    static [str_toLength](str, length, fillChar = '0') {
+    /**
+     * 字符串长度控制方法
+     * @param {string} str 字符串
+     * @param {Number} length 目标长度
+     * @param {string} fillstring 填充字符
+     * @returns {string} 返回目标长度的字符串
+     */
+    static [str_toLength](str, length, fillstring = '0') {
         if (!str) {
-            str = fillChar;
+            str = fillstring;
         }
         if ('string' !== typeof (str)) {
             str = str.toString();
         }
         if (str.length < length) while (str.length < length) {
-            str = fillChar + str;
-        } else {
+            str = fillstring + str;
+        }
+        if (str.length > length) {
             str = str.substring(str.length - length, str.length);
         }
         return str;
@@ -22,7 +30,7 @@ class DateUtils {
     /**
      * 格式化日期时间
      * @param {Date} date 日期时间对象
-     * @param {string} formater 格式化字符串
+     * @param {string} format 格式化字符串
      * yyyy:年份(如2019);
      * yy:短年份(如19);
      * MM:月份，10以下用0补位;
@@ -42,7 +50,7 @@ class DateUtils {
      * a:am或pm
      * @returns {string} 日期字符串
      */
-    static format(date, formater) {
+    static format(date, format) {
         if (!date) {
             return null;
         }
@@ -76,35 +84,35 @@ class DateUtils {
         };
         for (let k in o) {
             let reg = new RegExp(k, 'g');
-            let ms = reg.exec(formater);
+            let ms = reg.exec(format);
             if (ms && ms.length) for (let i = 0; i < ms.length; i++) {
                 let p = ms[i];
                 let v = o[k];
-                formater = formater.replace(p, v);
+                format = format.replace(p, v);
             }
         }
-        return formater;
+        return format;
     }
 
     /**
      * 将字符串转换成日期
      * @param {string} datestr 日期时间字符串
-     * @param {string} formater 格式化字符串
+     * @param {string} format 格式化字符串
      * @returns {Date} 日期时间对象
      */
-    static parse(datestr, formater = "yyyy-MM-dd HH:mm:ss") {
+    static parse(datestr, format = "yyyy-MM-dd HH:mm:ss") {
         if (!datestr) {
             return null;
         }
-        let fullYearPos = formater.indexOf("yyyy");
-        let shortYearPos = formater.indexOf("yy");
-        let monthPos = formater.indexOf("MM");
-        let dayhPos = formater.indexOf("dd");
-        let hourPos = formater.indexOf("HH");
-        let minutePos = formater.indexOf("mm");
-        let secondsPos = formater.indexOf("ss");
-        let mSecondsPos = formater.indexOf("SSS");
-        let aPos = formater.indexOf("a");
+        let fullYearPos = format.indexOf("yyyy");
+        let shortYearPos = format.indexOf("yy");
+        let monthPos = format.indexOf("MM");
+        let dayhPos = format.indexOf("dd");
+        let hourPos = format.indexOf("HH");
+        let minutePos = format.indexOf("mm");
+        let secondsPos = format.indexOf("ss");
+        let mSecondsPos = format.indexOf("SSS");
+        let aPos = format.indexOf("a");
 
         let fullYear = fullYearPos != -1 ? datestr.substring(fullYearPos, fullYearPos + 4) : (shortYearPos != -1 ? '20' + datestr.substring(shortYearPos, shortYearPos + 2) : '1970');
         let month = monthPos != -1 ? datestr.substring(monthPos, monthPos + 2) : '01';
@@ -157,7 +165,7 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到日期（如：2019-01-15 01:01:01 > 2019-01-15 00:00:00）
+     * 时间取整到日期（如：2019-01-01 01:01:01 > 2019-01-01 00:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
@@ -171,7 +179,7 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到小时（如：2019-01-15 01:01:01 > 2019-01-15 01:00:00）
+     * 时间取整到小时（如：2019-01-01 01:01:01 > 2019-01-01 01:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
@@ -200,14 +208,14 @@ class DateUtils {
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2secends(date) {
+    static round2secend(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         return _date;
     }
 
     /**
-     * 给日期时间增加天数（如：2019-01-15 01:01:01 > 2019-01-16 01:01:01）
+     * 给日期时间增加天数（如：2019-01-01 01:01:01 . addDay(1) > 2019-01-02 01:01:01）
      * @param {Date} date 日期时间
      * @param {number} day 天数
      * @returns {Date} 增加天数后的日期时间
@@ -217,7 +225,7 @@ class DateUtils {
     }
 
     /**
-     * 给日期时间增加小时数（如：2019-01-15 01:01:01 . addHour(1) > 2019-01-15 02:01:01）
+     * 给日期时间增加小时数（如：2019-01-01 01:01:01 . addHour(1) > 2019-01-01 02:01:01）
      * @param {Date} date 日期时间
      * @param {number} hour 小时数
      * @returns {Date} 增加小时数后的日期时间
@@ -227,7 +235,7 @@ class DateUtils {
     }
 
     /**
-     * 给日期时间增加分钟数（如：2019-01-15 01:01:01 . addMinute(1) > 2019-01-15 01:02:01）
+     * 给日期时间增加分钟数（如：2019-01-01 01:01:01 . addMinute(1) > 2019-01-01 01:02:01）
      * @param {Date} date 日期时间
      * @param {number} minute 分钟数
      * @returns {Date} 增加分钟数后的日期时间
@@ -237,7 +245,7 @@ class DateUtils {
     }
 
     /**
-    * 给日期时间增加秒数（如：2019-01-15 01:01:01 . addSecend(1) > 2019-01-15 01:01:02）
+    * 给日期时间增加秒数（如：2019-01-01 01:01:01 . addSecend(1) > 2019-01-01 01:01:02）
     * @param {Date} date 日期时间
     * @param {number} sec 秒数
     * @returns {Date} 增加秒数后的日期时间
@@ -245,6 +253,33 @@ class DateUtils {
     static addSecend(date, sec) {
         return new Date(date.getTime() + sec * 1000);
     }
+
+    /**
+     * 返回 日期1 减去 日期2 的日期差
+     * @param {Date} date1 日期1
+     * @param {Date} date2 日期2
+     * @returns {Object} {days:相差天数, hours:余下的小时数, minutes:余下的分钟数, seconds:余下的秒数, milliseconds:余下的毫秒数, totaldays:总相差天数, totalhours:总共相差小时数, totalminutes:总共相差分钟数, totalseconds:总共相差秒数, totalmilliseconds:总共相差毫秒数}
+     */
+    static subtract(date1, date2) {
+        let time = date1.getTime() - date2.getTime();
+        let mday = 24 * 60 * 60 * 1000;
+        let mhour = 60 * 60 * 1000;
+        let mminute = 60 * 1000;
+        let mseconds = 1000;
+        return {
+            days: parseInt(time / mday),
+            hours: parseInt(time % mday / mhour),
+            minutes: parseInt(time % mday % mhour / mminute),
+            seconds: parseInt(time % mday % mhour % mminute / mseconds),
+            milliseconds: parseInt(time % mday % mhour % mminute % mseconds),
+            totaldays: parseInt(time / mday),
+            totalhours: parseInt(time / mhour),
+            totalminutes: parseInt(time / mminute),
+            totalseconds: parseInt(time / mseconds),
+            totalmilliseconds: time
+        };
+    }
+
 }
 
 module.exports = DateUtils;
