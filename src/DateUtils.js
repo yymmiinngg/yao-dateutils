@@ -38,9 +38,9 @@ class DateUtils {
      * dd:日子，10以下用0补位;
      * d:日子(0~31);
      * HH:小时，10以下用0补位;
-     * H:小时(0~24);
+     * H:小时(0~23);
      * hh:小时，10以下用0补位;
-     * h:小时(0~12);
+     * h:小时(0~11);
      * mm:分钟，10以下用0补位;
      * m:分钟(0~59);
      * ss:秒，10以下用0补位;
@@ -98,6 +98,16 @@ class DateUtils {
      * 将字符串转换成日期
      * @param {string} datestr 日期时间字符串
      * @param {string} format 格式化字符串
+     * yyyy:年份(如2019);
+     * yy:短年份(如19);
+     * MM:月份;
+     * dd:日子;
+     * HH:小时(0~23);
+     * hh:小时(0~11);
+     * mm:分钟;
+     * ss:秒;
+     * SSS:毫秒;
+     * a:am或pm
      * @returns {Date} 日期时间对象
      */
     static parse(datestr, format = "yyyy-MM-dd HH:mm:ss") {
@@ -108,41 +118,57 @@ class DateUtils {
         let shortYearPos = format.indexOf("yy");
         let monthPos = format.indexOf("MM");
         let dayhPos = format.indexOf("dd");
-        let hourPos = format.indexOf("HH");
+        let hourPos = format.indexOf("hh");
+        let HOURPos = format.indexOf("HH");
         let minutePos = format.indexOf("mm");
         let secondsPos = format.indexOf("ss");
         let mSecondsPos = format.indexOf("SSS");
         let aPos = format.indexOf("a");
 
-        let fullYear = fullYearPos != -1 ? datestr.substring(fullYearPos, fullYearPos + 4) : (shortYearPos != -1 ? '20' + datestr.substring(shortYearPos, shortYearPos + 2) : '1970');
-        let month = monthPos != -1 ? datestr.substring(monthPos, monthPos + 2) : '01';
-        let day = dayhPos != -1 ? datestr.substring(dayhPos, dayhPos + 2) : '01';
-        let hour = hourPos != -1 ? datestr.substring(hourPos, hourPos + 2) : '00';
-        let minute = minutePos != -1 ? datestr.substring(minutePos, minutePos + 2) : '00';
-        let seconds = secondsPos != -1 ? datestr.substring(secondsPos, secondsPos + 2) : '00';
-        let mSeconds = mSecondsPos != -1 ? datestr.substring(mSecondsPos, mSecondsPos + 3) : '000';
-        let a = aPos != -1 ? datestr.substring(aPos, aPos + 2) : 'am';
+        let fullYear = fullYearPos != -1 ? datestr.substring(fullYearPos, fullYearPos + 4) : null;
+        let shortYear = shortYearPos != -1 ? datestr.substring(shortYearPos, shortYearPos + 2) : null;
+        let month = monthPos != -1 ? datestr.substring(monthPos, monthPos + 2) : null;
+        let day = dayhPos != -1 ? datestr.substring(dayhPos, dayhPos + 2) : null;
+        let minute = minutePos != -1 ? datestr.substring(minutePos, minutePos + 2) : null;
+        let seconds = secondsPos != -1 ? datestr.substring(secondsPos, secondsPos + 2) : null;
+        let mSeconds = mSecondsPos != -1 ? datestr.substring(mSecondsPos, mSecondsPos + 3) : null;
+        let a = aPos != -1 ? datestr.substring(aPos, aPos + 2) : null;
+
+        let hour = hourPos != -1 ? datestr.substring(hourPos, hourPos + 2) : null;
+        let HOUR = HOURPos != -1 ? datestr.substring(HOURPos, HOURPos + 2) : null;
 
         let d4 = /^\d{4}$/;
         let d2 = /^\d{2}$/;
         let d3 = /^\d{3}$/;
         let aa = /^[ap]m$/;
-        if (!d4.test(fullYear)
-            || !d2.test(month)
-            || !d2.test(day)
-            || !d2.test(hour)
-            || !d2.test(minute)
-            || !d2.test(seconds)
-            || !d3.test(mSeconds)
-            || !aa.test(a)
+        if (
+            !(!fullYear || d4.test(fullYear)) ||
+            !(!shortYear || d2.test(shortYear)) ||
+            !(!month || d2.test(month)) ||
+            !(!day || d2.test(day)) ||
+            !(!hour || d2.test(hour)) ||
+            !(!HOUR || d2.test(HOUR)) ||
+            !(!minute || d2.test(minute)) ||
+            !(!seconds || d2.test(seconds)) ||
+            !(!mSeconds || d3.test(mSeconds)) ||
+            !(!a || aa.test(a))
         ) {
             return null;
         }
+
+        fullYear = fullYear ? parseInt(fullYear) : (shortYear ? '20' + shortYear : 1970);
+        month = month ? parseInt(month) : 1;
+        day = day ? parseInt(day) : 1;
+        HOUR = HOUR ? parseInt(HOUR) : (hour ? ((parseInt(hour) < 12 && a === 'pm') ? parseInt(hour) + 12 : parseInt(hour)) : 0);
+        minute = minute ? parseInt(minute) : 0;
+        seconds = seconds ? parseInt(seconds) : 0;
+        mSeconds = mSeconds ? parseInt(mSeconds) : 0;
+
         let date = new Date();
         date.setFullYear(fullYear);
         date.setMonth(month - 1);
         date.setDate(day);
-        date.setHours((hour < 12 && a === 'pm') ? hour + 12 : hour);
+        date.setHours(HOUR);
         date.setMinutes(minute);
         date.setSeconds(seconds);
         date.setMilliseconds(mSeconds);
@@ -208,7 +234,7 @@ class DateUtils {
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2secend(date) {
+    static round2Second(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         return _date;
@@ -245,17 +271,17 @@ class DateUtils {
     }
 
     /**
-    * 给日期时间增加秒数（如：2019-01-01 01:01:01 . addSecend(1) > 2019-01-01 01:01:02）
+    * 给日期时间增加秒数（如：2019-01-01 01:01:01 . addSecond(1) > 2019-01-01 01:01:02）
     * @param {Date} date 日期时间
     * @param {number} sec 秒数
     * @returns {Date} 增加秒数后的日期时间
     */
-    static addSecend(date, sec) {
+    static addSecond(date, sec) {
         return new Date(date.getTime() + sec * 1000);
     }
 
     /**
-     * 返回 日期1 减去 日期2 的日期差
+     * 返回 日期1 减去 日期2 的日期差（totalxxx为小数时向外取整，如计算得出totaldays==3.1，则totaldays实际返回值为4）
      * @param {Date} date1 日期1
      * @param {Date} date2 日期2
      * @returns {Object} {days:相差天数, hours:余下的小时数, minutes:余下的分钟数, seconds:余下的秒数, milliseconds:余下的毫秒数, totaldays:总相差天数, totalhours:总共相差小时数, totalminutes:总共相差分钟数, totalseconds:总共相差秒数, totalmilliseconds:总共相差毫秒数}
@@ -272,12 +298,31 @@ class DateUtils {
             minutes: parseInt(time % mday % mhour / mminute),
             seconds: parseInt(time % mday % mhour % mminute / mseconds),
             milliseconds: parseInt(time % mday % mhour % mminute % mseconds),
-            totaldays: parseInt(time / mday),
-            totalhours: parseInt(time / mhour),
-            totalminutes: parseInt(time / mminute),
-            totalseconds: parseInt(time / mseconds),
+            totaldays: parseInt(time / mday) + (time % mday === 0 ? 0 : 1),
+            totalhours: parseInt(time / mhour) + (time % mhour === 0 ? 0 : 1),
+            totalminutes: parseInt(time / mminute) + (time % mminute === 0 ? 0 : 1),
+            totalseconds: parseInt(time / mseconds) + (time % mseconds === 0 ? 0 : 1),
             totalmilliseconds: time
         };
+    }
+
+    /**
+     * 将一段时间拆分成更小的时间段(返回的数组长度始终比拆分数量大1)
+     * @param {*} date1 开始时间，如果开始时间大于结束时间，则返回从大到小的列表
+     * @param {*} date2 结束时间，如果结束时间大于开始时间，则返回从小到大的列表
+     * @param {*} count 拆分数量；如果count <= 1，则返回 [start,end]
+     * @returns {Array} 连续时间刻度的数组
+     */
+    static split(start, end, count) {
+        let subtractValue = DateUtils.subtract(end, start);
+        let timeItem = subtractValue.totalmilliseconds / count;
+        let arr = [new Date(start.getTime())];
+        while (arr.length < count) {
+            let t = start.getTime() + timeItem * arr.length;
+            arr.push(new Date(t))
+        }
+        arr.push(new Date(end.getTime()));
+        return arr;
     }
 
 }
