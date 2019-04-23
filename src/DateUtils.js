@@ -156,13 +156,14 @@ class DateUtils {
             return null;
         }
 
-        fullYear = fullYear ? parseInt(fullYear) : (shortYear ? '20' + shortYear : 1970);
-        month = month ? parseInt(month) : 1;
-        day = day ? parseInt(day) : 1;
-        HOUR = HOUR ? parseInt(HOUR) : (hour ? ((parseInt(hour) < 12 && a === 'pm') ? parseInt(hour) + 12 : parseInt(hour)) : 0);
-        minute = minute ? parseInt(minute) : 0;
-        seconds = seconds ? parseInt(seconds) : 0;
-        mSeconds = mSeconds ? parseInt(mSeconds) : 0;
+        fullYear = parseInt(fullYear ? fullYear : (shortYear ? '20' + shortYear : 1970));
+        month = parseInt(month ? month : 1);
+        day = parseInt(day ? day : 1);
+        hour = parseInt(hour ? hour : 0);
+        HOUR = parseInt(HOUR ? HOUR : (hour < 12 && a === 'pm') ? hour + 12 : hour);
+        minute = parseInt(minute ? minute : 0);
+        seconds = parseInt(seconds ? seconds : 0);
+        mSeconds = parseInt(mSeconds ? mSeconds : 0);
 
         let date = new Date();
         date.setFullYear(fullYear);
@@ -307,22 +308,42 @@ class DateUtils {
     }
 
     /**
-     * 将一段时间拆分成更小的时间段(返回的数组长度始终比拆分数量大1)
-     * @param {*} date1 开始时间，如果开始时间大于结束时间，则返回从大到小的列表
-     * @param {*} date2 结束时间，如果结束时间大于开始时间，则返回从小到大的列表
-     * @param {*} count 拆分数量；如果count <= 1，则返回 [start,end]
+     * 将一段时间均匀拆分成顺序时间点数组(返回的数组长度等于count)
+     * @param {Number} count 返回时间点个数；
+     * @param {Date} start 开始时间，如果开始时间大于结束时间，则返回从大到小的列表
+     * @param {Date} end 结束时间，如果结束时间大于开始时间，则返回从小到大的列表（默认为当前时间点）
      * @returns {Array} 连续时间刻度的数组
      */
-    static split(start, end, count) {
+    static splitPeriodTime(count, start, end = new Date()) {
+        if (count == 0) {
+            return [];
+        }
         let subtractValue = DateUtils.subtract(end, start);
         let timeItem = subtractValue.totalmilliseconds / count;
         let arr = [new Date(start.getTime())];
-        while (arr.length < count) {
+        while (arr.length < count - 1) {
             let t = start.getTime() + timeItem * arr.length;
             arr.push(new Date(t))
         }
-        arr.push(new Date(end.getTime()));
+        if (count > 1) {
+            arr.push(new Date(end.getTime()));
+        }
         return arr;
+    }
+
+    /**
+     * 获得周期内某一进度点的时间：把时间周期切分成100等分，取得progress所在进度的时间
+     * @param {Number} progress 进度点，范围[0~1)的符点数，精度为两位小数
+     * @param {} start 开始时间
+     * @param {*} end 结束时间（默认为当前时间点）
+     */
+    static getProgressTime(progress, start, end = new Date()) {
+        let idx = parseInt(progress * 100);
+        if (idx < 0 || idx >= 100) {
+            throw Error('progress must be number and in [0, 1)');
+        }
+        let arr = DateUtils.splitPeriodTime(100, start, end);
+        return arr[idx];
     }
 
 }

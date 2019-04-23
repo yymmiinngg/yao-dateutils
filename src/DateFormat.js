@@ -5,15 +5,15 @@ const DateUtils = require('./DateUtils');
 class DateFormat {
     
     constructor(format) { 
-        this.format = format;
+        this.formater = format;
     }
 
     format(date) { 
-        DateUtils.format(date, format);
+       return DateUtils.format(date, this.formater);
     }
 
     parse(dateStr) { 
-        DateUtils.parse(dateStr, format);
+        return DateUtils.parse(dateStr, this.formater);
     }
 }
 

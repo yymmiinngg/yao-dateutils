@@ -1,11 +1,21 @@
 {
-  "name": "yao-dateutils",
-  "version": "1.0.5",
-  "description": "Date工具：时间计算、时间取整，格式化字符串类似JAVA的SimpleDateFormat，如\"yyyy-MM-dd HH:mm:ss.SSS a\"",
-  "main": "yao_dateutils.js",
-  "scripts": {
-    "test": "node test.js"
-  },
-  "author": "Monster Yao",
-  "license": "ISC"
+    "name": "yao-dateutils",
+    "version": "1.0.6",
+    "main": "yao_dateutils.js",
+    "description": "Date工具：时间计算、时间取整，格式化字符串类似JAVA的SimpleDateFormat，如\"yyyy-MM-dd HH:mm:ss.SSS a\"",
+    "keywords": [
+        "Date",
+        "Utils",
+        "format"
+    ],
+    "homepage": "https://github.com/yymmiinngg/yao-dateutils",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:yymmiinngg/yao-dateutils.git"
+    },
+    "scripts": {
+        "test": "node test.js"
+    },
+    "author": "Monster Yao",
+    "license": "ISC"
 }
