@@ -299,10 +299,10 @@ class DateUtils {
             minutes: parseInt(time % mday % mhour / mminute),
             seconds: parseInt(time % mday % mhour % mminute / mseconds),
             milliseconds: parseInt(time % mday % mhour % mminute % mseconds),
-            totaldays: parseInt(time / mday) + (time % mday === 0 ? 0 : 1),
-            totalhours: parseInt(time / mhour) + (time % mhour === 0 ? 0 : 1),
-            totalminutes: parseInt(time / mminute) + (time % mminute === 0 ? 0 : 1),
-            totalseconds: parseInt(time / mseconds) + (time % mseconds === 0 ? 0 : 1),
+            totaldays: Math.ceil(time / mday),
+            totalhours: Math.ceil(time / mhour),
+            totalminutes: Math.ceil(time / mminute),
+            totalseconds: Math.ceil(time / mseconds),
             totalmilliseconds: time
         };
     }
