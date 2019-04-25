@@ -27,6 +27,8 @@ class DateUtils {
         return str;
     }
 
+    // === 时间格式化 =======================================================================================
+
     /**
      * 格式化日期时间
      * @param {Date} date 日期时间对象
@@ -176,12 +178,25 @@ class DateUtils {
         return date;
     }
 
+    // === 时间取整 =======================================================================================
+
     /**
-     * 时间取整到月（如：2019-01-15 01:01:01 > 2019-01-15 00:00:00）
+     * 时间向外取整到月（如：2019-4-16 10:32:38 > 2019-5-1 00:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2month(date) {
+    static ceil2month(date) {
+        let _date = DateUtils.floor2month(date);
+        _date.setMonth(_date.getMonth() + 1);
+        return _date;
+    }
+
+    /**
+     * 时间向内取整到月（如：2019-4-16 10:32:38 > 2019-4-1 00:00:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static floor2month(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         _date.setSeconds(0);
@@ -192,11 +207,37 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到日期（如：2019-01-01 01:01:01 > 2019-01-01 00:00:00）
+     * 时间进行“四舍五入”取整到月（如：2019-4-14 10:32:38 > 2019-4-1 00:00:00， 2019-4-16 10:32:38 > 2019-5-1 00:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2day(date) {
+    static round2month(date) {
+        let _date1 = DateUtils.floor2month(date);
+        let _date2 = DateUtils.ceil2month(date);
+        if ((_date2.getTime() - date.getTime()) <= (date.getTime() - _date1.getTime())) {
+            return _date2;
+        } else {
+            return _date1;
+        }
+    }
+
+    /**
+     * 时间向外取整到日期（如：2019-01-01 01:01:01 > 2019-01-02 00:00:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static ceil2day(date) {
+        let _date = DateUtils.floor2day(date);
+        _date.setDate(_date.getDate() + 1);
+        return _date;
+    }
+
+    /**
+     * 时间向内取整到日期（如：2019-01-01 01:01:01 > 2019-01-01 00:00:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static floor2day(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         _date.setSeconds(0);
@@ -206,11 +247,37 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到小时（如：2019-01-01 01:01:01 > 2019-01-01 01:00:00）
+     * 时间“四舍五入”取整到日期（如：2019-01-01 01:01:01 > 2019-01-01 00:00:00, 2019-01-01 12:01:01 > 2019-01-02 00:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2hour(date) {
+    static round2day(date) {
+        let _date1 = DateUtils.floor2day(date);
+        let _date2 = DateUtils.ceil2day(date);
+        if ((_date2.getTime() - date.getTime()) <= (date.getTime() - _date1.getTime())) {
+            return _date2;
+        } else {
+            return _date1;
+        }
+    }
+
+    /**
+     * 时间向外取整到小时（如：2019-01-01 01:01:01 > 2019-01-01 02:00:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static ceil2hour(date) {
+        let _date = DateUtils.floor2hour(date);
+        _date.setHours(_date.getHours() + 1);
+        return _date;
+    }
+
+    /**
+     * 时间向内取整到小时（如：2019-01-01 01:01:01 > 2019-01-01 01:00:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static floor2hour(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         _date.setSeconds(0);
@@ -219,11 +286,37 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到分钟（如：2019-01-15 01:01:01 > 2019-01-15 01:01:00）
+     * 时间“四舍五入”取整到小时（如：2019-01-01 01:01:01 > 2019-01-01 01:00:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2minute(date) {
+    static round2hour(date) {
+        let _date1 = DateUtils.floor2hour(date);
+        let _date2 = DateUtils.ceil2hour(date);
+        if ((_date2.getTime() - date.getTime()) <= (date.getTime() - _date1.getTime())) {
+            return _date2;
+        } else {
+            return _date1;
+        }
+    }
+
+    /**
+     * 时间向外取整到分钟（如：2019-01-15 01:01:01 > 2019-01-15 01:01:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static ceil2minute(date) {
+        let _date = DateUtils.floor2minute(date);
+        _date.setMinutes(_date.getMinutes() + 1);
+        return _date;
+    }
+
+    /**
+     * 时间向内取整到分钟（如：2019-01-15 01:01:01 > 2019-01-15 01:01:00）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static floor2minute(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         _date.setSeconds(0);
@@ -231,15 +324,58 @@ class DateUtils {
     }
 
     /**
-     * 时间取整到秒（如：2019-01-15 01:01:01.231 > 2019-01-15 01:01:01.000）
+     * 时间“四舍五入”取整到分钟（如：2019-01-15 01:01:01 > 2019-01-15 01:01:00）
      * @param {Date} date 日期时间
      * @returns {Date} 取整后的日期时间
      */
-    static round2Second(date) {
+    static round2minute(date) {
+        let _date1 = DateUtils.floor2minute(date);
+        let _date2 = DateUtils.ceil2minute(date);
+        if ((_date2.getTime() - date.getTime()) <= (date.getTime() - _date1.getTime())) {
+            return _date2;
+        } else {
+            return _date1;
+        }
+    }
+
+    /**
+     * 时间向外取整到秒（如：2019-01-15 01:01:01.231 > 2019-01-15 01:01:02.000）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static ceil2second(date) {
+        let _date = DateUtils.floor2second(date);
+        _date.setSeconds(_date.getSeconds() + 1);
+        return _date;
+    }
+
+    /**
+     * 时间向内取整到秒（如：2019-01-15 01:01:01.231 > 2019-01-15 01:01:01.000）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static floor2second(date) {
         let _date = new Date(date.getTime());
         _date.setMilliseconds(0);
         return _date;
     }
+
+    /**
+     * 时间“四舍五入”取整到秒（如：2019-01-15 01:01:01.231 > 2019-01-15 01:01:01.000）
+     * @param {Date} date 日期时间
+     * @returns {Date} 取整后的日期时间
+     */
+    static round2second(date) {
+        let _date1 = DateUtils.floor2second(date);
+        let _date2 = DateUtils.ceil2second(date);
+        if ((_date2.getTime() - date.getTime()) <= (date.getTime() - _date1.getTime())) {
+            return _date2;
+        } else {
+            return _date1;
+        }
+    }
+
+    // === 时间计算 =======================================================================================
 
     /**
      * 给日期时间增加天数（如：2019-01-01 01:01:01 . addDay(1) > 2019-01-02 01:01:01）
@@ -282,6 +418,18 @@ class DateUtils {
     }
 
     /**
+    * 给日期时间增加秒数（如：2019-01-01 01:01:01.000 . addMillisecond(1) > 2019-01-01 01:01:02.001）
+    * @param {Date} date 日期时间
+    * @param {number} msec 毫秒数
+    * @returns {Date} 增加毫秒数后的日期时间
+    */
+    static addMillisecond(date, msec) {
+        return new Date(date.getTime() + msec);
+    }
+
+    // === 时间对比 =======================================================================================
+
+    /**
      * 返回 日期1 减去 日期2 的日期差（totalxxx为小数时向外取整，如计算得出totaldays==3.1，则totaldays实际返回值为4）
      * @param {Date} date1 日期1
      * @param {Date} date2 日期2
@@ -307,6 +455,8 @@ class DateUtils {
         };
     }
 
+    // === 周期计算 =======================================================================================
+
     /**
      * 将一段时间均匀拆分成顺序时间点数组(返回的数组长度等于count)
      * @param {Number} count 返回时间点个数；
@@ -315,11 +465,11 @@ class DateUtils {
      * @returns {Array} 连续时间刻度的数组
      */
     static splitPeriodTime(count, start, end = new Date()) {
-        if (count == 0) {
+        if (count <= 0) {
             return [];
         }
         let subtractValue = DateUtils.subtract(end, start);
-        let timeItem = subtractValue.totalmilliseconds / count;
+        let timeItem = subtractValue.totalmilliseconds / (count - 1);
         let arr = [new Date(start.getTime())];
         while (arr.length < count - 1) {
             let t = start.getTime() + timeItem * arr.length;
