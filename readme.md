@@ -47,7 +47,6 @@ console.log('format by "yyyy-MM-dd HH:mm:ss.SSS"', DateUtils.format(now, 'yyyy-M
 console.log('format by "yyyy年MM月dd日HH时mm分ss秒"', DateUtils.format(now, 'yyyy年MM月dd日HH时mm分ss秒'));
 console.log('format by "yyyy-MM-dd hh:mm:ss a"', DateUtils.format(now, 'yyyy-MM-dd hh:mm:ss a'));
 console.log('format by "yy-MM-dd HH:mm:ss.SSS"', DateUtils.format(now, 'yy-MM-dd HH:mm:ss.SSS'));
-console.log();
 ```
 输出
 ```
@@ -199,11 +198,21 @@ floor2second 2019-01-16 23:59:59.000
 roundsecond 2019-01-16 23:59:59.000
 ```
 
-## 时间计算
+## 周期计算
 
 ```
 let result = DateUtils.subtract(yesterday, date);
 console.log('subtract', result);
+
+let dateArr = DateUtils.splitPeriodTime(3, tomorrow, yesterday);
+console.log('splitPeriodTime', ':', 5, ',', DateUtils.format(tomorrow, simpleFormat), ',', DateUtils.format(yesterday, simpleFormat));
+for (let d of dateArr) {
+    console.log(' - ', DateUtils.format(d, 'yyyy-MM-dd HH:mm:ss.SSS a'));
+}
+
+let d3 = DateUtils.getProgressTime(0.25, now, yesterday);
+console.log('getProgressTime', ':', 0.25, ',', DateUtils.format(now, simpleFormat), ',', DateUtils.format(yesterday, simpleFormat));
+console.log(DateUtils.format(d3, 'yyyy-MM-dd HH:mm:ss.SSS a'));
 ```
 输出
 ```
@@ -217,23 +226,7 @@ subtract { days: 97,
   totalminutes: 140751,
   totalseconds: 8445023,
   totalmilliseconds: 8445022080 }
-```
 
-## 周期计算
-
-```
-let dateArr = DateUtils.splitPeriodTime(3, tomorrow, yesterday);
-console.log('splitPeriodTime', ':', 5, ',', DateUtils.format(tomorrow, simpleFormat), ',', DateUtils.format(yesterday, simpleFormat));
-for (let d of dateArr) {
-    console.log(' - ', DateUtils.format(d, 'yyyy-MM-dd HH:mm:ss.SSS a'));
-}
-
-let d3 = DateUtils.getProgressTime(0.25, now, yesterday);
-console.log('getProgressTime', ':', 0.25, ',', DateUtils.format(now, simpleFormat), ',', DateUtils.format(yesterday, simpleFormat));
-console.log(DateUtils.format(d3, 'yyyy-MM-dd HH:mm:ss.SSS a'));
-```
-输出
-```
 splitPeriodTime : 5 , 2019-04-26 17:50:21.579 , 2019-04-24 17:50:21.579
  -  2019-04-26 17:50:21.579 pm
  -  2019-04-25 17:50:21.579 pm

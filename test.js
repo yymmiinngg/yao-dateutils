@@ -89,12 +89,11 @@ console.log('floor2second', DateUtils.format(floor2second, simpleFormat));
 console.log('roundsecond', DateUtils.format(roundsecond, simpleFormat));
 console.log();
 
-console.log('==== 时间计算 =====================');
+console.log('==== 周期计算 =====================');
 let result = DateUtils.subtract(yesterday, date);
 console.log('subtract', result);
 console.log();
 
-console.log('==== 周期计算 =====================');
 let dateArr = DateUtils.splitPeriodTime(3, tomorrow, yesterday);
 console.log('splitPeriodTime', ':', 5, ',', DateUtils.format(tomorrow, simpleFormat), ',', DateUtils.format(yesterday, simpleFormat));
 for (let d of dateArr) {
