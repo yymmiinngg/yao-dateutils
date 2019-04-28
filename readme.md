@@ -258,6 +258,14 @@ tomorrow 2019年04月26日17时50分21秒
 
 绑定Date类型方法
 
+- 'format',
+- 'ceil2month', 'floor2month', 'round2month',
+- 'ceil2day', 'floor2day', 'round2day',
+- 'ceil2hour', 'floor2hour', 'round2hour',
+- 'ceil2minute', 'floor2minute', 'round2minute',
+- 'ceil2second', 'floor2second', 'round2second',
+- 'addDay', 'addHour', 'addMinute', 'addSecond', 'addMillisecond'
+
 ```
 bindDatePrototype();
 console.log('bindDatePrototype');
